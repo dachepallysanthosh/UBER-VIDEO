@@ -33,16 +33,46 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.methods.generateAuthToken = function () {
-  return jwt.sign({ id: this._id }, process.env.JWT_SECRET);
+  if (!process.env.JWT_SECRET) {
+    throw new Error('JWT_SECRET is not defined');
+  }
+ 
+  const expiresIn = process.env.JWT_EXPIRES_IN || '24h';
+  return jwt.sign({ id: this._id }, process.env.JWT_SECRET, { expiresIn });
 };
 
 userSchema.methods.comparePassword = async function (enteredPassword) {
+  
+  if (!this.password) return false;
   return await bcrypt.compare(enteredPassword, this.password);
 };
 
 userSchema.statics.hashPassword = async function (password) {
-  return await bcrypt.hash(password, 10);
+  const saltRounds = Number(process.env.BCRYPT_SALT_ROUNDS) || 10;
+  return await bcrypt.hash(password, saltRounds);
 };
+
+
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) return next();
+  try {
+    this.password = await this.constructor.hashPassword(this.password);
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+});
+
+
+userSchema.set('toJSON', {
+  transform: function (doc, ret) {
+    ret.id = ret._id;
+    delete ret._id;
+    delete ret.__v;
+    delete ret.password;
+    return ret;
+  },
+});
 
 const User = mongoose.model('User', userSchema);
 
