@@ -28,15 +28,49 @@ Model: Captain (`models/captain.model.js`)
   - `statics.hashPassword(password)` — helper to hash a password with bcrypt (salt rounds 10 hardcoded in this model file).
 
 Routes (defined in `routes/captain.routes.js`)
-- `POST /register` — validation chain (express-validator):
-  - `body('email').isEmail()`
-  - `body('fullname.firstname').notEmpty()`
-  - `body('password').isLength({min:6})`
-  - `body('vechical.color').notEmpty()`
-  - `body('vechical.plate').notEmpty()`
-  - `body('vechical.capacity').isInt({min:1})`
-  - `body('vechical.vechicalType').isIn(['car','motercycle','auto'])`
-  - Controller: `registerCaptain` in `controllers/captain.controller.js`.
+- Base path: `/captains` — router is typically mounted at this prefix, yielding full endpoint paths shown below.
+- Endpoints:
+  - `POST /captains/register`
+    - Validation (express-validator): `body('email').isEmail()`, `body('fullname.firstname').notEmpty()`, `body('password').isLength({min:6})`, `body('vechical.color').notEmpty()`, `body('vechical.plate').notEmpty()`, `body('vechical.capacity').isInt({min:1})`, `body('vechical.vechicalType').isIn(['car','motercycle','auto'])`.
+    - Controller: `registerCaptain` in `controllers/captain.controller.js`.
+
+  - `POST /captains/login`
+    - Validation: `body('email').isEmail()`, `body('password').notEmpty()`.
+    - Controller: `loginCaptain` in `controllers/captain.controller.js`.
+
+  - `GET /captains/profile`
+    - Protected: requires `authMiddleware.authCaptain`.
+    - Controller: `getCaptainProfile` — returns authenticated captain attached by middleware as `req.captain`.
+
+  - `GET /captains/logout`
+    - Protected: requires `authMiddleware.authCaptain`.
+    - Controller: `logoutCaptain` — clears the `token` cookie and blacklists the token using `captain.service`.
+
+Notes:
+- Cookie & token behavior: successful `register`/`login` generate a JWT via `generateAuthToken()` and may set it in an httpOnly cookie named `token` (see controllers). In production `secure` is enabled when `NODE_ENV === 'production'`.
+- Logout behavior: token is pulled from `req.cookies.token` or the `Authorization` header and saved to the `BlacklistToken` collection; authentication middleware should verify the blacklist when validating tokens.
+
+Examples (full paths assume router mounted at `/captains`):
+ - Register (POST /captains/register) body:
+
+  {
+    "fullname": { "firstname": "Bob", "lastname": "Smith" },
+    "email": "bob@example.com",
+    "password": "captainpass",
+    "vechical": {
+      "color": "red",
+      "plate": "ABC123",
+      "capacity": 4,
+      "vechicalType": "car"
+    }
+  }
+
+ - Login (POST /captains/login) body:
+
+  {
+    "email": "bob@example.com",
+    "password": "captainpass"
+  }
 
 Controller: `controllers/captain.controller.js` (high level)
 - Flow in `registerCaptain`:
