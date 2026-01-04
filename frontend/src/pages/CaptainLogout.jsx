@@ -2,35 +2,31 @@ import React, { useEffect } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
-const UserLogout = () => {
+const CaptainLogout = () => {
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
 
   useEffect(() => {
     axios
-      .post(
-        `${import.meta.env.VITE_API_URL}/users/logout`,
-        {}, // POST body (empty)
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      )
+      .get(`${import.meta.env.VITE_API_URL}/captain/Logout`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
       .then((response) => {
         if (response.status === 200) {
           localStorage.removeItem("token");
-          navigate("/login");
+          navigate("/login"); // or "/captain/login"
         }
       })
       .catch(() => {
-        // Even if backend fails, logout locally
+        // even if API fails, logout locally
         localStorage.removeItem("token");
         navigate("/login");
       });
   }, []);
 
-  return null;
+  return null; // important
 };
 
-export default UserLogout;
+export default CaptainLogout;

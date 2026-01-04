@@ -33,19 +33,19 @@ const UserSignup = () => {
         { withCredentials: true }
       );
 
-      // ✅ save user if returned
+    
       if (response.data.user) {
         setUser(response.data.user);
       }
 
-      // ✅ save token if returned
+     
       if (response.data.token) {
         localStorage.setItem("token", response.data.token);
       }
 
-      navigate("/home"); // ✅ correct route
+      navigate("/home"); 
 
-      // reset form
+     
       setFullname({ firstname: "", lastname: "" });
       setEmail("");
       setPassword("");

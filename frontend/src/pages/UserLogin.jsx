@@ -12,30 +12,34 @@ const UserLogin = () => {
    const navigate = useNavigate();
 
     const { user, setUser } = useContext(UserDataContext);
-  const submitHandler = (e) => {
-    e.preventDefault()
-    
-    const userData = {
-      email: Email,
-      password: password,
-    }
+  const submitHandler = async (e) => {
+  e.preventDefault();
 
-    axios.post(`${import.meta.env.VITE_BASE_URL}/users/login`, userData, { withCredentials: true })
-      .then((res) => {
-        console.log("Login successful:", res.data);
-        
-        setUser(res.data.user);
-        localStorage.setItem('token', res.data.token);
-        navigate("/Home");
-      })
-      .catch((error) => {
-        console.error("Login failed:", error.response?.data || error.message);
-      });
-    setUserData(data)
+  const payload = {
+    email: Email,
+    password: password,
+  };
 
-    setEmail("")
-    setPassword("")
+  try {
+    const res = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/users/login`,
+      payload,
+      { withCredentials: true }
+    );
+
+    console.log("Login successful:", res.data);
+
+    setUser(res.data.user); // context
+    localStorage.setItem("token", res.data.token);
+
+    navigate("/Home");
+  } catch (error) {
+    console.error("Login failed:", error.response?.data || error.message);
   }
+
+  setEmail("");
+  setPassword("");
+}
 
 
 
