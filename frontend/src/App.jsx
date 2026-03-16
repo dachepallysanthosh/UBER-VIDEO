@@ -8,9 +8,12 @@ import CaptainLogin from "./pages/CaptainLogin.jsx";
 import CaptainSignup from "./pages/CaptainSignup.jsx";
 import Home from "./pages/Home.jsx";
 import CaptainHome from "./pages/CaptainHome.jsx";
+import Riding from "./pages/Riding.jsx";
+import CaptainRiding from "./pages/CaptainRiding.jsx";
 import UserProtectWrapper from "./pages/UserProtectWrapper.jsx";
 import CaptainProtectWrapper from "./pages/CaptainProtectWrapper.jsx";
 import UserLogout from "./pages/UserLogout.jsx";
+import CaptainLogout from "./pages/CaptainLogout.jsx";
 
 const App = () => {
   return (
@@ -31,6 +34,14 @@ const App = () => {
           </UserProtectWrapper>
         }
       />
+      <Route
+        path="/riding"
+        element={
+          <UserProtectWrapper>
+            <Riding />
+          </UserProtectWrapper>
+        }
+      />
 
       <Route
         path="/user/logout"
@@ -40,6 +51,14 @@ const App = () => {
           </UserProtectWrapper>
         }
       />
+      <Route
+        path="/captain/logout"
+        element={
+          <CaptainProtectWrapper>
+            <CaptainLogout />
+          </CaptainProtectWrapper>
+        }
+      />
 
       {/* Captain protected routes */}
       <Route
@@ -47,6 +66,14 @@ const App = () => {
         element={
           <CaptainProtectWrapper>
             <CaptainHome />
+          </CaptainProtectWrapper>
+        }
+      />
+      <Route
+        path="/captain/riding"
+        element={
+          <CaptainProtectWrapper>
+            <CaptainRiding />
           </CaptainProtectWrapper>
         }
       />

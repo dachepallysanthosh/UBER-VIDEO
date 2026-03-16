@@ -20,4 +20,6 @@ module.exports.createUser = async ({
   });
 
   return user;
+
+  return user;
 };

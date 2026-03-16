@@ -9,7 +9,7 @@ const cookieOptions = {
   sameSite: 'strict',
 };
 
-/* ================= REGISTER USER ================= */
+
 module.exports.registerUser = async (req, res) => {
   try {
     const errors = validationResult(req);

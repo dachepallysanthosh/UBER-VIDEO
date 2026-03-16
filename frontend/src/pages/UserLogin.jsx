@@ -1,7 +1,7 @@
 import { useState , useContext } from "react"
 import { Link } from "react-router-dom"
 import axios from "axios";
-import { UserDataContext } from "../context/usercontext.jsx";
+import { UserDataContext } from "../context/UserContext";
 import { useNavigate } from "react-router-dom";
 
 
@@ -23,8 +23,7 @@ const UserLogin = () => {
   try {
     const res = await axios.post(
       `${import.meta.env.VITE_BASE_URL}/users/login`,
-      payload,
-      { withCredentials: true }
+      payload
     );
 
     console.log("Login successful:", res.data);
@@ -32,9 +31,10 @@ const UserLogin = () => {
     setUser(res.data.user); // context
     localStorage.setItem("token", res.data.token);
 
-    navigate("/Home");
+    navigate("/home");
   } catch (error) {
     console.error("Login failed:", error.response?.data || error.message);
+    alert("Invalid email or password");
   }
 
   setEmail("");

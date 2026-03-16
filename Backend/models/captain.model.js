@@ -17,11 +17,11 @@ const captainSchema = new mongoose.Schema({
     required: true,
     select: false,
   },
-  vechical: {
+  vehicle: {
     color: String,
     plate: String,
     capacity: Number,
-    vechicalType: String,
+    vehicleType: String,
   },
 });
 

@@ -9,10 +9,10 @@ const VehiclePanel = (props) => {
       <h5
         className="p-1 text-center absolute w-[93%] top-0"
         onClick={() => {
-         props.setvehiclePanelOpen(false);
-          props.setpanelOpen(false);
+          props.setVehiclePanel(false);
         }}
       >
+        
         <i className="text-3xl text-gray-200 ri-arrow-down-wide-fill"></i>
       </h5>
 
@@ -20,7 +20,8 @@ const VehiclePanel = (props) => {
 
       
       <div onClick={() => {
-          props.setConformRidePanel(true);
+          props.selectVehicle('car');
+          props.setConfirmRidePanel(true);
         }} className="flex active:border-2 rounded-xl w-full p-3 mb-2 items-center justify-between">
         <img
           className="h-10"
@@ -41,7 +42,8 @@ const VehiclePanel = (props) => {
 
       
       <div onClick={() => {
-          props.setConformRidePanel(true);
+          props.selectVehicle('motorcycle');
+          props.setConfirmRidePanel(true);
         }} className="flex active:border-2 rounded-xl w-full p-3 mb-2 items-center justify-between">
         <img
           className="h-10"
@@ -62,7 +64,8 @@ const VehiclePanel = (props) => {
 
       
       <div onClick={() => {
-          props.setConformRidePanel(true);
+          props.selectVehicle('auto');
+          props.setConfirmRidePanel(true);
         }} className="flex active:border-2 rounded-xl w-full p-3 mb-2 items-center justify-between">
         <img
           className="h-10"

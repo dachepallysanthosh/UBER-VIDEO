@@ -1,139 +1,125 @@
-import { Link, useNavigate } from "react-router-dom";
-import React, { useState, useContext } from "react";
-import axios from "axios";
-import { UserDataContext } from "../context/usercontext.jsx";
+import React, { useState, useContext } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { UserDataContext } from '../context/UserContext'
+
+
 
 const UserSignup = () => {
-  const [fullname, setFullname] = useState({
-    firstname: "",
-    lastname: "",
-  });
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [ email, setEmail ] = useState('')
+  const [ password, setPassword ] = useState('')
+  const [ firstName, setFirstName ] = useState('')
+  const [ lastName, setLastName ] = useState('')
+  const [ userData, setUserData ] = useState({})
 
-  const navigate = useNavigate();
-  const { setUser } = useContext(UserDataContext);
+  const navigate = useNavigate()
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
 
+
+  const { user, setUser } = useContext(UserDataContext)
+
+
+
+
+  const submitHandler = async (e) => {
+    e.preventDefault()
     const newUser = {
       fullname: {
-        firstname: fullname.firstname,
-        lastname: fullname.lastname,
+        firstname: firstName,
+        lastname: lastName
       },
-      email,
-      password,
-    };
-
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BASE_URL}/users/register`,
-        newUser,
-        { withCredentials: true }
-      );
-
-    
-      if (response.data.user) {
-        setUser(response.data.user);
-      }
-
-     
-      if (response.data.token) {
-        localStorage.setItem("token", response.data.token);
-      }
-
-      navigate("/home"); 
-
-     
-      setFullname({ firstname: "", lastname: "" });
-      setEmail("");
-      setPassword("");
-    } catch (error) {
-      console.error(
-        "Signup failed:",
-        error.response?.data || error.message
-      );
-      alert(error.response?.data?.message || "Signup failed");
+      email: email,
+      password: password
     }
-  };
 
+    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser)
+
+    if (response.status === 201) {
+      const data = response.data
+      setUser(data.user)
+      localStorage.setItem('token', data.token)
+      navigate('/home')
+    }
+
+
+    setEmail('')
+    setFirstName('')
+    setLastName('')
+    setPassword('')
+
+  }
   return (
-    <div className="min-h-screen flex flex-col">
-      <div className="bg-black w-full h-16 flex items-center">
-        <img
-          className="w-20 ml-4 object-contain"
-          src="https://cdn.dribbble.com/userupload/30846413/file/still-2ebad96f3bcdf511e1a66a295ebd0ea9.png"
-          alt="logo"
-        />
-      </div>
+    <div>
+      <div className='p-7 h-screen flex flex-col justify-between'>
+        <div>
+          <img className='w-16 mb-10' src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQYQy-OIkA6In0fTvVwZADPmFFibjmszu2A0g&s" alt="" />
 
-      <div className="flex-1 p-6 flex flex-col justify-between">
-        <form onSubmit={handleSubmit}>
-          <h3 className="text-xl font-semibold mb-2">What’s your name?</h3>
+          <form onSubmit={(e) => {
+            submitHandler(e)
+          }}>
 
-          <div className="flex gap-3 mb-4">
+            <h3 className='text-lg w-1/2  font-medium mb-2'>What's your name</h3>
+            <div className='flex gap-4 mb-7'>
+              <input
+                required
+                className='bg-[#eeeeee] w-1/2 rounded-lg px-4 py-2 border  text-lg placeholder:text-base'
+                type="text"
+                placeholder='First name'
+                value={firstName}
+                onChange={(e) => {
+                  setFirstName(e.target.value)
+                }}
+              />
+              <input
+                required
+                className='bg-[#eeeeee] w-1/2  rounded-lg px-4 py-2 border  text-lg placeholder:text-base'
+                type="text"
+                placeholder='Last name'
+                value={lastName}
+                onChange={(e) => {
+                  setLastName(e.target.value)
+                }}
+              />
+            </div>
+
+            <h3 className='text-lg font-medium mb-2'>What's your email</h3>
             <input
               required
-              value={fullname.firstname}
-              onChange={(e) =>
-                setFullname({ ...fullname, firstname: e.target.value })
-              }
-              className="bg-[#eeeeee] w-1/2 rounded px-4 py-2 border text-lg"
-              placeholder="First name"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value)
+              }}
+              className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+              type="email"
+              placeholder='email@example.com'
             />
+
+            <h3 className='text-lg font-medium mb-2'>Enter Password</h3>
 
             <input
-              required
-              value={fullname.lastname}
-              onChange={(e) =>
-                setFullname({ ...fullname, lastname: e.target.value })
-              }
-              className="bg-[#eeeeee] w-1/2 rounded px-4 py-2 border text-lg"
-              placeholder="Last name"
+              className='bg-[#eeeeee] mb-7 rounded-lg px-4 py-2 border w-full text-lg placeholder:text-base'
+              value={password}
+              onChange={(e) => {
+                setPassword(e.target.value)
+              }}
+              required type="password"
+              placeholder='password'
             />
-          </div>
 
-          <h3 className="text-xl font-semibold mb-2">What’s your email?</h3>
-          <input
-            required
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="bg-[#eeeeee] mb-4 rounded px-4 py-2 border w-full text-lg"
-            type="email"
-            placeholder="email@example.com"
-          />
+            <button
+              className='bg-[#111] text-white font-semibold mb-3 rounded-lg px-4 py-2 w-full text-lg placeholder:text-base'
+            >Create account</button>
 
-          <h3 className="text-xl font-semibold mb-2">Create password</h3>
-          <input
-            required
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="bg-[#eeeeee] mb-4 rounded px-4 py-2 border w-full text-lg"
-            type="password"
-            placeholder="Password"
-          />
-
-          <button className="bg-black text-white w-full py-2 rounded-lg text-lg">
-            Create Account
-          </button>
-        </form>
-
-        <div className="text-center text-sm space-y-2">
-          <p>
-            Already have an account?{" "}
-            <Link to="/login" className="text-blue-600 font-medium">
-              Login
-            </Link>
-          </p>
-          <p className="text-xs text-gray-600">
-            By continuing, you agree to calls, WhatsApp, or texts from Uber and
-            its affiliates.
-          </p>
+          </form>
+          <p className='text-center'>Already have a account? <Link to='/login' className='text-blue-600'>Login here</Link></p>
+        </div>
+        <div>
+          <p className='text-[10px] leading-tight'>This site is protected by reCAPTCHA and the <span className='underline'>Google Privacy
+            Policy</span> and <span className='underline'>Terms of Service apply</span>.</p>
         </div>
       </div>
-    </div>
-  );
-};
+    </div >
+  )
+}
 
 export default UserSignup

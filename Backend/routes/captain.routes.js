@@ -12,10 +12,10 @@ router.post(
     body("email").isEmail(),
     body("fullname.firstname").notEmpty(),
     body("password").isLength({ min: 6 }),
-    body("vechical.color").notEmpty(),
-    body("vechical.plate").notEmpty(),
-    body("vechical.capacity").isInt({ min: 1 }),
-    body("vechical.vechicalType").isIn(["car", "auto", "motercycle"]),
+    body("vehicle.color").notEmpty(),
+    body("vehicle.plate").notEmpty(),
+    body("vehicle.capacity").isInt({ min: 1 }),
+    body("vehicle.vehicleType").isIn(["car", "auto", "motorcycle"]),
   ],
   captainController.registerCaptain
 );

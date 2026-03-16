@@ -3,7 +3,6 @@ const captainService = require("../services/captain.service");
 const BlacklistTokenModel = require("../models/blacklistToken.model");
 const { validationResult } = require("express-validator");
 
-/* ================= REGISTER ================= */
 module.exports.registerCaptain = async (req, res) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {

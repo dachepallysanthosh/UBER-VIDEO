@@ -1,11 +1,11 @@
 import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { CaptainContext } from "../context/CaptainContext";
+import { CaptainDataContext } from "../context/CaptainContext";
 
 const CaptainLogin = () => {
   const navigate = useNavigate();
-  const { setCaptain } = useContext(CaptainContext);
+  const { setCaptain } = useContext(CaptainDataContext);
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -16,8 +16,7 @@ const CaptainLogin = () => {
     try {
       const res = await axios.post(
         `${import.meta.env.VITE_BASE_URL}/captains/login`,
-        { email, password },
-        { withCredentials: true }
+        { email, password }
       );
 
       // set captain in context

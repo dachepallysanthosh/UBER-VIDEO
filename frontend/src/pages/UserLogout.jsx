@@ -9,7 +9,7 @@ const UserLogout = () => {
   useEffect(() => {
     axios
       .post(
-        `${import.meta.env.VITE_API_URL}/users/logout`,
+        `${import.meta.env.VITE_BASE_URL}/users/logout`,
         {}, // POST body (empty)
         {
           headers: {
